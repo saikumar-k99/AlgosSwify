@@ -1,0 +1,42 @@
+import UIKit
+
+extension String {
+    func between(_ leftWord: String, _ rightWord: String) -> String? {
+        guard let leftRange = range(of: leftWord), let rightRange = range(of: rightWord, options: .backwards)
+            ,leftRange.upperBound <= rightRange.lowerBound else {
+            print("invalid String")
+            return nil
+            
+        }
+
+        let sub = self[leftRange.upperBound...]
+        let closestToLeftRange = sub.range(of: rightWord)!
+        return String(sub[..<closestToLeftRange.lowerBound])
+    }
+
+}
+
+func isValidHTMLLink(tagString: String) -> Bool {
+    let pTag = "<p>"
+    let endTag = "</p>"
+    print("\(tagString.starts(with: pTag))")
+    print(" strt tag count is \(tagString.components(separatedBy: pTag)) and end tag count is \(tagString.components(separatedBy: endTag).count)")
+    guard tagString.starts(with: pTag), tagString.components(separatedBy: pTag).count == 2, tagString.hasSuffix(endTag), tagString != "" else {
+        print("returning pre condition")
+        return false
+    }
+    
+    if let urlString = tagString.between(pTag, endTag) {
+        print("a valid string \(urlString)")
+        return true
+    } else {
+        print("invalid link--app cant open")
+        return false
+    }
+}
+
+//testing
+let htmlTagString1 = #"https://www"#
+let string2 = #"fjalsfs<p>this is a</p>>"#
+
+isValidHTMLLink(tagString: htmlTagString1)
